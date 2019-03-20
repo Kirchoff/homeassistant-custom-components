@@ -2,6 +2,7 @@
 
 import subprocess
 import json
+import argparse
 
 HARD_DRIVE_LIST = list() # populated by discover_drives()
 
@@ -12,6 +13,11 @@ HARD_DRIVE_SMART_IDS = {
 "Current_Pending_Sector", # 197
 "Offline_Uncorrectable", # 198
 }
+
+def parse_cli_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--path', required=True, help='required for <file_path> to be used for smartctl.json output')
+    return parser.parse_args()
 
 def discover_drives():
     # Populate all the connected drives
@@ -42,11 +48,17 @@ def discover_drives():
                 HARD_DRIVE_LIST.append(hdd)
 
 def main():
+    # Save the file path
+    args = parse_cli_arguments()
+    print(args.path)
+    if (args.path == None):
+        sys.exit(0)
+
     # Determine which drives are available and support smartctl
     discover_drives()
 
     # TODO: update to use sys.argv input
-    output_file = open("/home/lincoln/.homeassistant/custom_components/sensor/smartctl.json", "w")
+    output_file = open(str(args.path) + "smartctl.json", "w")
 
     # Iterate over our drive list
     for hdd in HARD_DRIVE_LIST:
@@ -78,4 +90,3 @@ def main():
 
 if __name__== "__main__":
   main()
-
