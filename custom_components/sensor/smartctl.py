@@ -10,8 +10,6 @@ import json
 # smartctl module
 DOMAIN = 'smartctl'
 
-# data source
-
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Setup the sensor platform."""
     json_file = open('/config/custom_components/sensor/smartctl.json', 'r')
@@ -19,9 +17,6 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         json_line = json.loads(line)
         add_devices([SmartCtl(json_line)])
     json_file.close()
-
-
-
 
 class SmartCtl(Entity):
     """Representation of a SmartCTL Sensor."""
